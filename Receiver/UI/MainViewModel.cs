@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Receiver.MessageServiceReference;
 
 namespace Receiver.UI
 {
     public class MainViewModel : ViewModelBase
     {
         private string _text;
+        private readonly MessageServiceClient _messageService;
 
         public string Text
         {
@@ -22,9 +24,15 @@ namespace Receiver.UI
 
         public MainViewModel()
         {
+            _messageService = new MessageServiceClient();
+            _init();
+        }
+
+        private void _init()
+        {
             Update = new RelayCommand(() =>
             {
-
+                Text = _messageService.GetMessage();
             });
         }
     }

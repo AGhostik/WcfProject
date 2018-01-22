@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Sender.UI
+namespace Host.UI
 {
     public partial class MainWindow : Window
     {
