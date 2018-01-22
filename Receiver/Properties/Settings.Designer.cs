@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WcfProject.Properties
+namespace Receiver.Properties
 {
 
 
