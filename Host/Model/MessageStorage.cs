@@ -1,17 +1,24 @@
 ﻿namespace Host.Model
 {
-    public class MessageStorage
+    public class MessageStorage : IMessageStorage
     {
+        private readonly object _syncObject = new object();
         private static string _message;
 
         public void SetMessage(string message)
         {
-            _message = message;
+            lock (_syncObject)
+            {
+                _message = message;
+            }
         }
 
         public string GetMessage()
         {
-            return _message;
+            lock (_syncObject)
+            {
+                return _message;
+            }
         }
     }
 }

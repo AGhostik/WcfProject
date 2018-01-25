@@ -14,7 +14,7 @@ namespace Host.UI
         public RelayCommand StartService { get; set; }
         public RelayCommand StopService { get; set; }
 
-        private readonly IHostService _hostService;
+        private readonly HostService _hostService;
         
         public MainViewModel()
         {

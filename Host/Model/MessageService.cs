@@ -19,7 +19,7 @@ namespace Host.Model
 
     public class MessageService : IMessageService
     {
-        private readonly MessageStorage _storage;
+        private readonly IMessageStorage _storage;
 
         public MessageService()
         {

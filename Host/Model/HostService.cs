@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Host.Model
 {
-    public class HostService : IHostService
+    public class HostService
     {
         private readonly ServiceHost _host;
 

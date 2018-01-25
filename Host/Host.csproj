@@ -80,8 +80,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\IHostService.cs" />
     <Compile Include="Model\HostService.cs" />
+    <Compile Include="Model\IMessageStorage.cs" />
     <Compile Include="Model\MessageStorage.cs" />
     <Compile Include="Model\MessageService.cs" />
     <Compile Include="UI\MainViewModel.cs" />
