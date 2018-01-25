@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -12,7 +13,7 @@ namespace Receiver.UI
     public class MainViewModel : ViewModelBase
     {
         private string _text;
-        private readonly MessageServiceClient _messageService;
+        public EventHandler ConnectionError;
 
         public string Text
         {
@@ -24,7 +25,6 @@ namespace Receiver.UI
 
         public MainViewModel()
         {
-            _messageService = new MessageServiceClient();
             _init();
         }
 
@@ -32,7 +32,15 @@ namespace Receiver.UI
         {
             Update = new RelayCommand(() =>
             {
-                Text = _messageService.GetMessage();
+                try
+                {
+                    var messageService = new MessageServiceClient();
+                    Text = messageService.GetMessage();
+                }
+                catch (EndpointNotFoundException)
+                {
+                    ConnectionError?.Invoke(this, null);
+                }
             });
         }
     }
