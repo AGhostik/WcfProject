@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:Host.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Host"
-    Width="200"
-    Height="300"
+    Width="150"
+    Height="200"
     d:DataContext="{d:DesignInstance d:Type=local:MainViewModel}"
     mc:Ignorable="d">
     <Grid>
@@ -26,5 +26,24 @@
             Margin="5"
             Command="{Binding StopService}"
             Content="Stop service" />
+        <Rectangle
+            Grid.Row="2"
+            Margin="5">
+            <Rectangle.Style>
+                <Style TargetType="{x:Type Rectangle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding State}" Value="1">
+                            <Setter Property="Fill" Value="DarkGreen"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="0">
+                            <Setter Property="Fill" Value="DarkOrange"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="-1">
+                            <Setter Property="Fill" Value="DarkRed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Rectangle.Style>
+            </Rectangle>
     </Grid>
 </Window>
