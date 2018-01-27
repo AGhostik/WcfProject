@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using NLog;
 using Sender.MessageServiceReference;
 
 namespace Sender.UI
@@ -16,6 +17,8 @@ namespace Sender.UI
         public string Text { get; set; }
         public RelayCommand Send { get; set; }
         public EventHandler ConnectionError;
+
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public MainViewModel()
         {
@@ -30,12 +33,16 @@ namespace Sender.UI
                 {
                     var messageService = new MessageServiceClient();
                     messageService.SetMessage(Text);
+                    _logger.Info($"Send message; length = {Text.Length}");
                 }
                 catch (EndpointNotFoundException)
                 {
+                    _logger.Error("EndpointNotFoundException");
                     ConnectionError?.Invoke(this, null);
                 }
             });
+
+            _logger.Info("Im ready");
         }
     }
 }

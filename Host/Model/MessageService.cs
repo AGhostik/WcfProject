@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using NLog;
 
 namespace Host.Model
 {
@@ -20,6 +21,7 @@ namespace Host.Model
     public class MessageService : IMessageService
     {
         private readonly IMessageStorage _storage;
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public MessageService()
         {
@@ -28,11 +30,13 @@ namespace Host.Model
 
         public string GetMessage()
         {
+            _logger.Info($"GetMessage request");
             return _storage.GetMessage();
         }
 
         public void SetMessage(string message)
         {
+            _logger.Info($"SetMessage request; {message.Length}");
             _storage.SetMessage(message);
         }
     }

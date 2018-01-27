@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:Host.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Host"
-    Width="150"
-    Height="200"
+    Width="250"
+    Height="250"
     d:DataContext="{d:DesignInstance d:Type=local:MainViewModel}"
     mc:Ignorable="d">
     <Grid>
