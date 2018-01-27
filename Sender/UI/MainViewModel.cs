@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
@@ -14,31 +9,55 @@ namespace Sender.UI
 {
     public class MainViewModel : ViewModelBase
     {
-        public string Text { get; set; }
-        public RelayCommand Send { get; set; }
-        public EventHandler ConnectionError;
-
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private bool _buttonEnabled;
+        private bool _isBusy;
+        public EventHandler ConnectionError;
 
         public MainViewModel()
         {
             _init();
         }
 
+        public string Text { get; set; }
+        public RelayCommand Send { get; set; }
+
+        public bool ButtonEnabled
+        {
+            get => _buttonEnabled;
+            set => Set(ref _buttonEnabled, value);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => Set(ref _isBusy, value);
+        }
+
         private void _init()
         {
-            Send = new RelayCommand(() =>
+            ButtonEnabled = true;
+            IsBusy = false;
+
+            Send = new RelayCommand(async () =>
             {
+                ButtonEnabled = false;
+                IsBusy = true;
                 try
                 {
                     var messageService = new MessageServiceClient();
-                    messageService.SetMessage(Text);
-                    _logger.Info($"Send message; length = {Text.Length}");
+                    await messageService.SetMessageAsync(Text);
+                    _logger.Info($"Send message; length = {Text?.Length}");
                 }
                 catch (EndpointNotFoundException)
                 {
                     _logger.Error("EndpointNotFoundException");
                     ConnectionError?.Invoke(this, null);
+                }
+                finally
+                {
+                    ButtonEnabled = true;
+                    IsBusy = false;
                 }
             });
 

@@ -24,6 +24,8 @@
             Grid.Row="1"
             Margin="5"
             Command="{Binding Send}"
-            Content="Send" />
+            Content="Send"
+            IsEnabled="{Binding ButtonEnabled}" />
+        <xceed:BusyIndicator Grid.Row="0" IsBusy="{Binding IsBusy}" />
     </Grid>
 </Window>

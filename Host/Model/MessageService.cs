@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading.Tasks;
 using NLog;
 
 namespace Host.Model
@@ -31,12 +32,13 @@ namespace Host.Model
         public string GetMessage()
         {
             _logger.Info($"GetMessage request");
+            Task.Delay(10000).Wait();
             return _storage.GetMessage();
         }
 
         public void SetMessage(string message)
         {
-            _logger.Info($"SetMessage request; {message.Length}");
+            _logger.Info($"SetMessage request; {message?.Length}");
             _storage.SetMessage(message);
         }
     }

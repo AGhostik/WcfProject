@@ -14,36 +14,18 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Button
             Grid.Row="0"
             Margin="5"
             Command="{Binding StartService}"
-            Content="Start service" />
+            Content="Start service"
+            IsEnabled="{Binding StartEnabled}" />
         <Button
             Grid.Row="1"
             Margin="5"
             Command="{Binding StopService}"
-            Content="Stop service" />
-        <Rectangle
-            Grid.Row="2"
-            Margin="5">
-            <Rectangle.Style>
-                <Style TargetType="{x:Type Rectangle}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding State}" Value="1">
-                            <Setter Property="Fill" Value="DarkGreen"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding State}" Value="0">
-                            <Setter Property="Fill" Value="DarkOrange"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding State}" Value="-1">
-                            <Setter Property="Fill" Value="DarkRed"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Rectangle.Style>
-            </Rectangle>
+            Content="Stop service"
+            IsEnabled="{Binding StopEnabled}" />
     </Grid>
 </Window>

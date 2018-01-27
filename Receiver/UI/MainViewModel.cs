@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
@@ -13,10 +9,16 @@ namespace Receiver.UI
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private bool _buttonEnabled;
+        private bool _isBusy;
         private string _text;
         public EventHandler ConnectionError;
 
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        public MainViewModel()
+        {
+            _init();
+        }
 
         public string Text
         {
@@ -26,25 +28,42 @@ namespace Receiver.UI
 
         public RelayCommand Update { get; set; }
 
-        public MainViewModel()
+        public bool ButtonEnabled
         {
-            _init();
+            get => _buttonEnabled;
+            set => Set(ref _buttonEnabled, value);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => Set(ref _isBusy, value);
         }
 
         private void _init()
         {
-            Update = new RelayCommand(() =>
+            ButtonEnabled = true;
+            IsBusy = false;
+
+            Update = new RelayCommand(async () =>
             {
+                ButtonEnabled = false;
+                IsBusy = true;
                 try
                 {
                     var messageService = new MessageServiceClient();
-                    Text = messageService.GetMessage();
-                    _logger.Info($"Get message; length = {Text.Length}");
+                    Text = await messageService.GetMessageAsync();
+                    _logger.Info($"Get message; length = {Text?.Length}");
                 }
                 catch (EndpointNotFoundException)
                 {
                     _logger.Error("EndpointNotFoundException");
                     ConnectionError?.Invoke(this, null);
+                }
+                finally
+                {
+                    ButtonEnabled = true;
+                    IsBusy = false;
                 }
             });
 

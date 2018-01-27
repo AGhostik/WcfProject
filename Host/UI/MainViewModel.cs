@@ -10,8 +10,9 @@ namespace Host.UI
         private readonly HostService _hostService;
 
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
-        private int _state;
+        private bool _startEnabled;
+        
+        private bool _stopEnabled;
 
         public MainViewModel()
         {
@@ -21,33 +22,36 @@ namespace Host.UI
 
         public RelayCommand StartService { get; set; }
         public RelayCommand StopService { get; set; }
-
-        public int State
+        
+        public bool StartEnabled
         {
-            get => _state;
-            set => Set(ref _state, value);
+            get => _startEnabled;
+            set => Set(ref _startEnabled, value);
+        }
+
+        public bool StopEnabled
+        {
+            get => _stopEnabled;
+            set => Set(ref _stopEnabled, value);
         }
 
         private void _init()
         {
-            StartService = new RelayCommand(() => { _hostService.Open(); });
-            StopService = new RelayCommand(() => { _hostService.Close(); });
+            StartEnabled = true;
+            StopEnabled = false;
 
-            _hostService.HostOpened += (sender, args) =>
+            StartService = new RelayCommand(() =>
             {
-                State = 1;
-                _logger.Info("Service opened");
-            };
-            _hostService.HostClosed += (sender, args) =>
+                _hostService.Open();
+                StartEnabled = false;
+                StopEnabled = true;
+            });
+            StopService = new RelayCommand(() =>
             {
-                State = 0;
-                _logger.Info("Service closed");
-            };
-            _hostService.HostFaulted += (sender, args) =>
-            {
-                State = -1;
-                _logger.Error("Service faulted");
-            };
+                _hostService.Close();
+                StartEnabled = true;
+                StopEnabled = false;
+            });
 
             _logger.Info("App init");
         }
