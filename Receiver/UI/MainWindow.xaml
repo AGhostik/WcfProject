@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Receiver.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
     Title="Receiver"
     Width="525"
     Height="350"
@@ -15,12 +16,11 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox
+        <xceed:RichTextBox
             Grid.Row="0"
             Margin="5"
             IsReadOnly="True"
-            Text="{Binding Text}"
-            TextWrapping="Wrap" />
+            Text="{Binding Text}" />
         <Button
             Grid.Row="1"
             Margin="5"
