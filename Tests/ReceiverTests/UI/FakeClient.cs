@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ClientLibrary.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Receiver.Model;
 
 namespace ReceiverTests.UI
 {
@@ -19,9 +19,14 @@ namespace ReceiverTests.UI
             return "message";
         }
 
-        public void Init(string url)
+        public Task Init(string url)
         {
-            
+            return Task.Delay(0);
+        }
+
+        public Task SetMessageAsync(string message)
+        {
+            return Task.Delay(0);
         }
     }
 }

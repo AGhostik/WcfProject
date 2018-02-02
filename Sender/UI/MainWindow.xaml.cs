@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Sender.Model;
+using ClientLibrary.Model;
 
 namespace Sender.UI
 {

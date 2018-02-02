@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-namespace Sender.Model
+namespace ClientLibrary.Model
 {
     public interface IClient
     {
+        Task<string> GetMessageAsync();
         Task SetMessageAsync(string message);
-        void Init(string url);
+        Task Init(string url);
         void Close();
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
+using ClientLibrary.MessageServiceReference;
 using NLog;
-using Receiver.MessageServiceReference;
 
-namespace Receiver.Model
+namespace ClientLibrary.Model
 {
     public class Client : IClient
     {
@@ -19,11 +16,12 @@ namespace Receiver.Model
             
         }
 
-        public void Init(string url)
+        public async Task Init(string url)
         {
             _client = new MessageServiceClient();
             _client.Endpoint.Address = new EndpointAddress(url + "/MessageService");
             _client.Open();
+            await _client.PingAsync();
             _logger.Info($"Connection created; {url}");
         }
 
@@ -42,6 +40,17 @@ namespace Receiver.Model
             var text = await _client.GetMessageAsync();
             _logger.Info($"Get message; length = {text?.Length}");
             return text;
+        }
+
+        public async Task SetMessageAsync(string message)
+        {
+            if (_client == null)
+            {
+                _logger.Error("Client not initialized");
+                throw new NullReferenceException("Client not initialized");
+            }
+            await _client.SetMessageAsync(message);
+            _logger.Info($"Set message; length = {message?.Length}");
         }
     }
 }

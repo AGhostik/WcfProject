@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using Receiver.Model;
+using ClientLibrary.Model;
 
 namespace Receiver.UI
 {

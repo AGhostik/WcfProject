@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ServiceModel;
+using ClientLibrary.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
-using Sender.MessageServiceReference;
-using Sender.Model;
 
 namespace Sender.UI
 {
@@ -65,21 +64,30 @@ namespace Sender.UI
             IsBusy = false;
             ButtonState = ConnectionButtonState.Connect;
 
-            Connect = new RelayCommand(() =>
+            Connect = new RelayCommand(async () =>
             {
                 switch (ButtonState)
                 {
                     case ConnectionButtonState.Connect:
-                        _client.Init(Url);
-                        SendButtonEnabled = true;
-                        UrlFieldEnabled = false;
-                        ButtonState = ConnectionButtonState.Disconnect;
+                        try
+                        {
+                            await _client.Init(Url);
+                            SendButtonEnabled = true;
+                            UrlFieldEnabled = false;
+                            ButtonState = ConnectionButtonState.Disconnect;
+                        }
+                        catch (EndpointNotFoundException)
+                        {
+                            _logger.Error("EndpointNotFoundException");
+                            ConnectionError?.Invoke(this, null);
+                        }
                         break;
                     case ConnectionButtonState.Disconnect:
                         _client.Close();
                         SendButtonEnabled = false;
                         UrlFieldEnabled = true;
                         ButtonState = ConnectionButtonState.Connect;
+                        Text = string.Empty;
                         break;
                 }
             });

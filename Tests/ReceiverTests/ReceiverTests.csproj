@@ -76,6 +76,10 @@
     <Compile Include="UI\MainViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ClientLibrary\ClientLibrary.csproj">
+      <Project>{3F48FF93-0714-4938-A92F-525365205A58}</Project>
+      <Name>ClientLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Receiver\Receiver.csproj">
       <Project>{fad6df54-ef97-4047-bae4-5552672f0aef}</Project>
       <Name>Receiver</Name>
