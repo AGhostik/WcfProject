@@ -4,13 +4,9 @@ using System.ServiceModel.Description;
 
 namespace Host.Model
 {
-    public class HostService
+    public class HostService : IHostService
     {
         private ServiceHost _host;
-
-        //public EventHandler HostClosed;
-        //public EventHandler HostFaulted;
-        //public EventHandler HostOpened;
 
         public void Open()
         {
@@ -19,10 +15,6 @@ namespace Host.Model
 
             var sdb = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
             sdb.IncludeExceptionDetailInFaults = true;
-
-            //_host.Opened += (sender, args) => { HostOpened?.Invoke(this, null); };
-            //_host.Closed += (sender, args) => { HostClosed?.Invoke(this, null); };
-            //_host.Faulted += (sender, args) => { HostFaulted?.Invoke(this, null); };
 
             _host.Open();
         }

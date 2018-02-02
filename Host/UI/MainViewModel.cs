@@ -1,22 +1,21 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Windows;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Host.Model;
-using NLog;
 
 namespace Host.UI
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly HostService _hostService;
-
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly IHostService _hostService;
+        
         private bool _startEnabled;
         
         private bool _stopEnabled;
 
-        public MainViewModel()
+        public MainViewModel(IHostService service)
         {
-            _hostService = new HostService();
+            _hostService = service;
             _init();
         }
 
@@ -52,8 +51,6 @@ namespace Host.UI
                 StartEnabled = true;
                 StopEnabled = false;
             });
-
-            _logger.Info("App init");
         }
     }
 }

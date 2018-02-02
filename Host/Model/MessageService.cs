@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using Unity;
 
 namespace Host.Model
 {
@@ -24,9 +26,21 @@ namespace Host.Model
         private readonly IMessageStorage _storage;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public MessageService()
+        public MessageService():this(DependencyFactory.Resolve<IMessageStorage>())
         {
-            _storage = new MessageStorage();
+            if (_storage == null)
+            {
+                _storage = new MessageStorage();
+                Debug.WriteLine("IMessageStorage dont resolved by DependencyFactory");
+            }
+            else
+            {
+                Debug.WriteLine("IMessageStorage resolved");
+            }
+        }
+        public MessageService(IMessageStorage storage)
+        {
+            _storage = storage;
         }
 
         public string GetMessage()
