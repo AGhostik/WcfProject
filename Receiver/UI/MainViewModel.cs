@@ -60,6 +60,11 @@ namespace Receiver.UI
                     _logger.Error("EndpointNotFoundException");
                     ConnectionError?.Invoke(this, null);
                 }
+                catch (FaultException)
+                {
+                    _logger.Error("EndpointNotFoundException");
+                    ConnectionError?.Invoke(this, null);
+                }
                 finally
                 {
                     ButtonEnabled = true;

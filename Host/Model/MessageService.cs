@@ -25,10 +25,7 @@ namespace Host.Model
     {
         private readonly IMessageStorage _storage;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
-        public MessageService():this(new MessageStorage())
-        {
-        }
+        
         public MessageService(IMessageStorage storage)
         {
             _storage = storage;
@@ -37,7 +34,7 @@ namespace Host.Model
         public string GetMessage()
         {
             _logger.Info($"GetMessage request");
-            Task.Delay(10000).Wait();
+            Task.Delay(1000).Wait();
             return _storage.GetMessage();
         }
 

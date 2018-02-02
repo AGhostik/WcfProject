@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Threading.Tasks;
 using System.Windows;
 using Host.Model;
@@ -25,16 +26,24 @@ namespace Host
             IUnityContainer container = new UnityContainer();
           
             container.RegisterType<IHostService, HostService>();
+            container.RegisterType<IMessageService, MessageService>();
             container.RegisterType<IMessageStorage, MessageStorage>();
-
-            var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080/MessageService"));
-            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new WSHttpBinding(), "MessageService");
-            container.RegisterInstance<ServiceHost>(unityServiceHost);
+            
+            container.RegisterInstance<ServiceHost>(CreateServiceHost(container));
 
             var mainWindows = container.Resolve<MainWindow>();
             mainWindows.Show();
 
             _logger.Info("App init");
+        }
+
+        private UnityServiceHost CreateServiceHost(IUnityContainer container)
+        {
+            var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080/MessageService"));
+            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new WSHttpBinding(), "MessageService");
+            var sdb = unityServiceHost.Description.Behaviors.Find<ServiceDebugBehavior>();
+            sdb.IncludeExceptionDetailInFaults = true;
+            return unityServiceHost;
         }
     }
 }

@@ -7,11 +7,11 @@ namespace Host.Model
 {
     public class HostService : IHostService
     {
-        private ServiceHost _host;
+        private readonly ServiceHost _host;
 
         public HostService(ServiceHost host)
         {
-            _init(host);
+            _host = host;
         }
 
         public void Open()
@@ -22,15 +22,6 @@ namespace Host.Model
         public void Close()
         {
             _host?.Close();
-        }
-
-        private void _init(ServiceHost host)
-        {
-            _host = host; //new ServiceHost(typeof(MessageService), new Uri("http://localhost:8080/MessageService"));
-
-            var sdb = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
-            sdb.IncludeExceptionDetailInFaults = true;
-
         }
     }
 }
