@@ -10,6 +10,7 @@ using Host.Model;
 using Host.UI;
 using NLog;
 using Unity;
+using Unity.Wcf;
 
 namespace Host
 {
@@ -20,12 +21,15 @@ namespace Host
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            
             IUnityContainer container = new UnityContainer();
-
-           
-
+          
             container.RegisterType<IHostService, HostService>();
             container.RegisterType<IMessageStorage, MessageStorage>();
+
+            var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080/MessageService"));
+            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new WSHttpBinding(), "MessageService");
+            container.RegisterInstance<ServiceHost>(unityServiceHost);
 
             var mainWindows = container.Resolve<MainWindow>();
             mainWindows.Show();

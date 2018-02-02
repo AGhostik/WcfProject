@@ -26,17 +26,8 @@ namespace Host.Model
         private readonly IMessageStorage _storage;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public MessageService():this(DependencyFactory.Resolve<IMessageStorage>())
+        public MessageService():this(new MessageStorage())
         {
-            if (_storage == null)
-            {
-                _storage = new MessageStorage();
-                Debug.WriteLine("IMessageStorage dont resolved by DependencyFactory");
-            }
-            else
-            {
-                Debug.WriteLine("IMessageStorage resolved");
-            }
         }
         public MessageService(IMessageStorage storage)
         {
