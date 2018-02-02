@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Receiver.UI;
 
 namespace ReceiverTests.UI
 {
@@ -7,8 +8,11 @@ namespace ReceiverTests.UI
     public class MainViewModelTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Update_TextChanged()
         {
+            var viewModel = new MainViewModel(new FakeClient());
+            viewModel.Update.Execute(null);
+            Assert.AreEqual(viewModel.Text, "message");
         }
     }
 }

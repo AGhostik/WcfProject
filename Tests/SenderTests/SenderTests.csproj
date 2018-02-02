@@ -72,16 +72,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\FakeClient.cs" />
+    <Compile Include="UI\MainViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ClientLibrary\ClientLibrary.csproj">
+      <Project>{3F48FF93-0714-4938-A92F-525365205A58}</Project>
+      <Name>ClientLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Sender\Sender.csproj">
       <Project>{c3a42eb2-3464-4cf8-b681-77af8e763932}</Project>
       <Name>Sender</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -11,11 +11,6 @@ namespace ClientLibrary.Model
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private MessageServiceClient _client;
 
-        public Client()
-        {
-            
-        }
-
         public async Task Init(string url)
         {
             _client = new MessageServiceClient();
@@ -37,6 +32,7 @@ namespace ClientLibrary.Model
                 _logger.Error("Client not initialized");
                 throw new NullReferenceException("Client not initialized");
             }
+
             var text = await _client.GetMessageAsync();
             _logger.Info($"Get message; length = {text?.Length}");
             return text;
@@ -49,6 +45,7 @@ namespace ClientLibrary.Model
                 _logger.Error("Client not initialized");
                 throw new NullReferenceException("Client not initialized");
             }
+
             await _client.SetMessageAsync(message);
             _logger.Info($"Set message; length = {message?.Length}");
         }
