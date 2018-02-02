@@ -39,8 +39,8 @@ namespace Host
 
         private UnityServiceHost CreateServiceHost(IUnityContainer container)
         {
-            var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080/MessageService"));
-            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new WSHttpBinding(), "MessageService");
+            var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080"));
+            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new BasicHttpBinding(), "MessageService");
             var sdb = unityServiceHost.Description.Behaviors.Find<ServiceDebugBehavior>();
             sdb.IncludeExceptionDetailInFaults = true;
             return unityServiceHost;

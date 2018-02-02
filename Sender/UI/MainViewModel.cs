@@ -4,28 +4,51 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
 using Sender.MessageServiceReference;
+using Sender.Model;
 
 namespace Sender.UI
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly IClient _client;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        private bool _buttonEnabled;
+        private ConnectionButtonState _buttonState;
         private bool _isBusy;
-        public EventHandler ConnectionError;
 
-        public MainViewModel()
+        private bool _sendSendButtonEnabled;
+        private bool _urlFieldEnabled;
+        public EventHandler ConnectionError;
+        public EventHandler ServerError;
+
+        public MainViewModel(IClient client)
         {
+            _client = client;
             _init();
+        }
+
+        public string Url { get; set; }
+
+        public RelayCommand Connect { get; set; }
+
+        public ConnectionButtonState ButtonState
+        {
+            get => _buttonState;
+            set => Set(ref _buttonState, value);
+        }
+
+        public bool UrlFieldEnabled
+        {
+            get => _urlFieldEnabled;
+            set => Set(ref _urlFieldEnabled, value);
         }
 
         public string Text { get; set; }
         public RelayCommand Send { get; set; }
 
-        public bool ButtonEnabled
+        public bool SendButtonEnabled
         {
-            get => _buttonEnabled;
-            set => Set(ref _buttonEnabled, value);
+            get => _sendSendButtonEnabled;
+            set => Set(ref _sendSendButtonEnabled, value);
         }
 
         public bool IsBusy
@@ -36,18 +59,38 @@ namespace Sender.UI
 
         private void _init()
         {
-            ButtonEnabled = true;
+            Url = "http://127.0.0.1:8080/";
+            SendButtonEnabled = false;
+            UrlFieldEnabled = true;
             IsBusy = false;
+            ButtonState = ConnectionButtonState.Connect;
+
+            Connect = new RelayCommand(() =>
+            {
+                switch (ButtonState)
+                {
+                    case ConnectionButtonState.Connect:
+                        _client.Init(Url);
+                        SendButtonEnabled = true;
+                        UrlFieldEnabled = false;
+                        ButtonState = ConnectionButtonState.Disconnect;
+                        break;
+                    case ConnectionButtonState.Disconnect:
+                        _client.Close();
+                        SendButtonEnabled = false;
+                        UrlFieldEnabled = true;
+                        ButtonState = ConnectionButtonState.Connect;
+                        break;
+                }
+            });
 
             Send = new RelayCommand(async () =>
             {
-                ButtonEnabled = false;
+                SendButtonEnabled = false;
                 IsBusy = true;
                 try
                 {
-                    var messageService = new MessageServiceClient();
-                    await messageService.SetMessageAsync(Text);
-                    _logger.Info($"Send message; length = {Text?.Length}");
+                    await _client.SetMessageAsync(Text);
                 }
                 catch (EndpointNotFoundException)
                 {
@@ -56,12 +99,12 @@ namespace Sender.UI
                 }
                 catch (FaultException)
                 {
-                    _logger.Error("EndpointNotFoundException");
-                    ConnectionError?.Invoke(this, null);
+                    _logger.Error("Fault Exception");
+                    ServerError?.Invoke(this, null);
                 }
                 finally
                 {
-                    ButtonEnabled = true;
+                    SendButtonEnabled = true;
                     IsBusy = false;
                 }
             });

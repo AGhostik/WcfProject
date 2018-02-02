@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{033AC1E7-3F1E-4164-82A8-F47024353AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostTests", "HostTests\HostTests.csproj", "{1B590FF8-61BB-405F-870A-90FC01029530}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostTests", "Tests\HostTests\HostTests.csproj", "{1B590FF8-61BB-405F-870A-90FC01029530}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiverTests", "ReceiverTests\ReceiverTests.csproj", "{158A390A-053B-4BB0-9689-B8EEA3C52499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiverTests", "Tests\ReceiverTests\ReceiverTests.csproj", "{158A390A-053B-4BB0-9689-B8EEA3C52499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SenderTests", "SenderTests\SenderTests.csproj", "{2A32D44E-6811-45A9-93ED-0ADE3B97DC5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SenderTests", "Tests\SenderTests\SenderTests.csproj", "{2A32D44E-6811-45A9-93ED-0ADE3B97DC5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

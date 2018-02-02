@@ -8,6 +8,9 @@ namespace Host.Model
     public interface IMessageService
     {
         [OperationContract]
+        void Ping();
+
+        [OperationContract]
         string GetMessage();
 
         [OperationContract]
@@ -22,6 +25,11 @@ namespace Host.Model
         public MessageService(IMessageStorage storage)
         {
             _storage = storage;
+        }
+
+        public void Ping()
+        {
+
         }
 
         public string GetMessage()

@@ -15,6 +15,12 @@ namespace Receiver.MessageServiceReference {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MessageServiceReference.IMessageService")]
     public interface IMessageService {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Ping", ReplyAction="http://tempuri.org/IMessageService/PingResponse")]
+        void Ping();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Ping", ReplyAction="http://tempuri.org/IMessageService/PingResponse")]
+        System.Threading.Tasks.Task PingAsync();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetMessage", ReplyAction="http://tempuri.org/IMessageService/GetMessageResponse")]
         string GetMessage();
         
@@ -53,6 +59,14 @@ namespace Receiver.MessageServiceReference {
         
         public MessageServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
+        }
+        
+        public void Ping() {
+            base.Channel.Ping();
+        }
+        
+        public System.Threading.Tasks.Task PingAsync() {
+            return base.Channel.PingAsync();
         }
         
         public string GetMessage() {

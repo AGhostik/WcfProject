@@ -3,20 +3,26 @@ using System.ServiceModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
-using Receiver.MessageServiceReference;
+using Receiver.Model;
 
 namespace Receiver.UI
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly IClient _client;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        private bool _buttonEnabled;
+        private ConnectionButtonState _buttonState;
+
         private bool _isBusy;
         private string _text;
+        private bool _updateButtonEnabled;
+        private bool _urlFieldEnabled;
         public EventHandler ConnectionError;
+        public EventHandler ServerError;
 
-        public MainViewModel()
+        public MainViewModel(IClient client)
         {
+            _client = client;
             _init();
         }
 
@@ -26,12 +32,15 @@ namespace Receiver.UI
             set => Set(ref _text, value);
         }
 
-        public RelayCommand Update { get; set; }
+        public string Url { get; set; }
 
-        public bool ButtonEnabled
+        public RelayCommand Update { get; set; }
+        public RelayCommand Connect { get; set; }
+
+        public bool UpdateButtonEnabled
         {
-            get => _buttonEnabled;
-            set => Set(ref _buttonEnabled, value);
+            get => _updateButtonEnabled;
+            set => Set(ref _updateButtonEnabled, value);
         }
 
         public bool IsBusy
@@ -40,34 +49,67 @@ namespace Receiver.UI
             set => Set(ref _isBusy, value);
         }
 
+        public ConnectionButtonState ButtonState
+        {
+            get => _buttonState;
+            set => Set(ref _buttonState, value);
+        }
+
+        public bool UrlFieldEnabled
+        {
+            get => _urlFieldEnabled;
+            set => Set(ref _urlFieldEnabled, value);
+        }
+
         private void _init()
         {
-            ButtonEnabled = true;
+            Url = "http://127.0.0.1:8080/";
+            UpdateButtonEnabled = false;
+            UrlFieldEnabled = true;
             IsBusy = false;
+            ButtonState = ConnectionButtonState.Connect;
+
+            Connect = new RelayCommand(() =>
+            {
+                switch (ButtonState)
+                {
+                    case ConnectionButtonState.Connect:
+                        _client.Init(Url);
+                        UpdateButtonEnabled = true;
+                        UrlFieldEnabled = false;
+                        ButtonState = ConnectionButtonState.Disconnect;
+                        break;
+                    case ConnectionButtonState.Disconnect:
+                        _client.Close();
+                        UpdateButtonEnabled = false;
+                        UrlFieldEnabled = true;
+                        ButtonState = ConnectionButtonState.Connect;
+                        break;
+                }
+            });
 
             Update = new RelayCommand(async () =>
             {
-                ButtonEnabled = false;
+                UpdateButtonEnabled = false;
                 IsBusy = true;
+                Text = string.Empty;
                 try
                 {
-                    var messageService = new MessageServiceClient();
-                    Text = await messageService.GetMessageAsync();
-                    _logger.Info($"Get message; length = {Text?.Length}");
+                    Text = await _client.GetMessageAsync();
                 }
                 catch (EndpointNotFoundException)
                 {
-                    _logger.Error("EndpointNotFoundException");
+                    _logger.Error("EndpointNotFound Exception");
                     ConnectionError?.Invoke(this, null);
                 }
                 catch (FaultException)
                 {
-                    _logger.Error("EndpointNotFoundException");
-                    ConnectionError?.Invoke(this, null);
+                    _logger.Error("Fault Exception");
+                    ServerError?.Invoke(this, null);
                 }
                 finally
                 {
-                    ButtonEnabled = true;
+                    UpdateButtonEnabled = true;
                     IsBusy = false;
                 }
             });
