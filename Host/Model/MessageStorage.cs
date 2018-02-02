@@ -2,8 +2,8 @@
 {
     public class MessageStorage : IMessageStorage
     {
-        private readonly object _syncObject = new object();
         private static string _message;
+        private readonly object _syncObject = new object();
 
         public void SetMessage(string message)
         {

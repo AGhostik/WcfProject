@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+﻿using System.ServiceModel;
 using System.Threading.Tasks;
 using NLog;
-using Unity;
 
 namespace Host.Model
 {
@@ -23,9 +16,9 @@ namespace Host.Model
 
     public class MessageService : IMessageService
     {
-        private readonly IMessageStorage _storage;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        
+        private readonly IMessageStorage _storage;
+
         public MessageService(IMessageStorage storage)
         {
             _storage = storage;

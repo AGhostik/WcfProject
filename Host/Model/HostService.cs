@@ -1,7 +1,4 @@
-﻿using System;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using Unity.Wcf;
+﻿using System.ServiceModel;
 
 namespace Host.Model
 {
