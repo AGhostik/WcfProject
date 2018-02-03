@@ -27,8 +27,12 @@ namespace Host
           
             container.RegisterType<IHostService, HostService>();
             container.RegisterType<IMessageService, MessageService>();
-            container.RegisterType<IMessageStorage, MessageStorage>();
-            
+            container.RegisterType<IMessageStorage, XmlStorage>();
+
+            container.RegisterInstance(new StorageSettings
+            {
+                MessageLimit = 0,
+            });
             container.RegisterInstance<ServiceHost>(CreateServiceHost(container));
 
             var mainWindows = container.Resolve<MainWindow>();

@@ -117,6 +117,8 @@
     <Compile Include="Model\IMessageStorage.cs" />
     <Compile Include="Model\MessageStorage.cs" />
     <Compile Include="Model\MessageService.cs" />
+    <Compile Include="Model\StorageSettings.cs" />
+    <Compile Include="Model\XmlStorage.cs" />
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

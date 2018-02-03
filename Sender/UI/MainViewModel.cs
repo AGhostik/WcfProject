@@ -62,6 +62,7 @@ namespace Sender.UI
             SendButtonEnabled = false;
             UrlFieldEnabled = true;
             IsBusy = false;
+            Text = string.Empty;
             ButtonState = ConnectionButtonState.Connect;
 
             Connect = new RelayCommand(async () =>

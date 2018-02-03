@@ -26,7 +26,7 @@
             Grid.Column="0"
             Margin="5"
             IsEnabled="{Binding UrlFieldEnabled}"
-            Text="{Binding Url}" />
+            Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}" />
         <Button
             Grid.Row="0"
             Grid.Column="1"
@@ -38,7 +38,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="5"
-            Text="{Binding Text}" />
+            Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
         <Button
             Grid.Row="2"
             Grid.Column="0"
