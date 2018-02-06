@@ -15,67 +15,6 @@ namespace Client.MessageServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Chat", Namespace="http://schemas.datacontract.org/2004/07/Host.Model.Data")]
-    [System.SerializableAttribute()]
-    public partial class Chat : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NameField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Id {
-            get {
-                return this.IdField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.IdField, value) != true)) {
-                    this.IdField = value;
-                    this.RaisePropertyChanged("Id");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Name {
-            get {
-                return this.NameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.NameField, value) != true)) {
-                    this.NameField = value;
-                    this.RaisePropertyChanged("Name");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/Host.Model.Data")]
     [System.SerializableAttribute()]
     public partial class Message : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -151,6 +90,67 @@ namespace Client.MessageServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Chat", Namespace="http://schemas.datacontract.org/2004/07/Host.Model.Data")]
+    [System.SerializableAttribute()]
+    public partial class Chat : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdField, value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MessageServiceReference.IMessageService", CallbackContract=typeof(Client.MessageServiceReference.IMessageServiceCallback))]
     public interface IMessageService {
@@ -161,17 +161,11 @@ namespace Client.MessageServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Ping", ReplyAction="http://tempuri.org/IMessageService/PingResponse")]
         System.Threading.Tasks.Task PingAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Subscribe", ReplyAction="http://tempuri.org/IMessageService/SubscribeResponse")]
-        bool Subscribe();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Subscribe", ReplyAction="http://tempuri.org/IMessageService/SubscribeResponse")]
-        System.Threading.Tasks.Task<bool> SubscribeAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetChats", ReplyAction="http://tempuri.org/IMessageService/GetChatsResponse")]
+        void GetChats();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetChats", ReplyAction="http://tempuri.org/IMessageService/GetChatsResponse")]
-        Client.MessageServiceReference.Chat[] GetChats();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetChats", ReplyAction="http://tempuri.org/IMessageService/GetChatsResponse")]
-        System.Threading.Tasks.Task<Client.MessageServiceReference.Chat[]> GetChatsAsync();
+        System.Threading.Tasks.Task GetChatsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/CreateChat", ReplyAction="http://tempuri.org/IMessageService/CreateChatResponse")]
         void CreateChat();
@@ -188,6 +182,15 @@ namespace Client.MessageServiceReference {
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IMessageServiceCallback {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Pong", ReplyAction="http://tempuri.org/IMessageService/PongResponse")]
+        void Pong();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/ChatsReceived", ReplyAction="http://tempuri.org/IMessageService/ChatsReceivedResponse")]
+        void ChatsReceived(Client.MessageServiceReference.Chat[] chats);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/ChatCreated", ReplyAction="http://tempuri.org/IMessageService/ChatCreatedResponse")]
+        void ChatCreated();
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMessageService/OnMessageAdded")]
         void OnMessageAdded(Client.MessageServiceReference.Message message);
@@ -229,19 +232,11 @@ namespace Client.MessageServiceReference {
             return base.Channel.PingAsync();
         }
         
-        public bool Subscribe() {
-            return base.Channel.Subscribe();
+        public void GetChats() {
+            base.Channel.GetChats();
         }
         
-        public System.Threading.Tasks.Task<bool> SubscribeAsync() {
-            return base.Channel.SubscribeAsync();
-        }
-        
-        public Client.MessageServiceReference.Chat[] GetChats() {
-            return base.Channel.GetChats();
-        }
-        
-        public System.Threading.Tasks.Task<Client.MessageServiceReference.Chat[]> GetChatsAsync() {
+        public System.Threading.Tasks.Task GetChatsAsync() {
             return base.Channel.GetChatsAsync();
         }
         

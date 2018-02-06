@@ -101,8 +101,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Model\Client.cs" />
-    <Compile Include="UI\ConnectionButtonState.cs" />
+    <Compile Include="Model\DuplexContractClient.cs" />
+    <Compile Include="Model\MessageClient.cs" />
+    <Compile Include="UI\ConnectionSettings.cs" />
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -126,9 +127,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Connected Services\MessageServiceReference\Client.MessageServiceReference.Chat.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\MessageServiceReference\item.xsd">
       <SubType>Designer</SubType>
     </None>

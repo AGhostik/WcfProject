@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using Host.Model.Data;
@@ -13,85 +14,66 @@ namespace Host.Model
         void Ping();
 
         [OperationContract]
-        bool Subscribe();
-
-        [OperationContract]
-        List<Chat> GetChats();
+        void GetChats();
 
         [OperationContract]
         void CreateChat();
 
-        [OperationContract(IsOneWay = true)]
+        [OperationContract]
         void AddMessage(string chatId, Message message);
     }
     
     public interface IMessageCallback
     { 
+        [OperationContract]
+        void Pong();
+
+        [OperationContract]
+        void ChatsReceived(List<Chat> chats);
+
+        [OperationContract]
+        void ChatCreated();
+
         [OperationContract(IsOneWay = true)]
         void OnMessageAdded(Message message);
     }
 
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class MessageService : IMessageService
     {
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly IMessageCallback _callback;
         private readonly IMessageStorage _storage;
 
         public MessageService(IMessageStorage storage)
         {
             _storage = storage;
+            _callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
         }
-
-        private static readonly List<IMessageCallback> Subscribers = new List<IMessageCallback>();
-
-        public bool Subscribe()
-        {
-            try
-            {
-                var callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
-                //callback.id = id;
-                if (!Subscribers.Contains(callback))
-                    Subscribers.Add(callback);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
+        
         public void Ping()
         {
-
+            _callback.Pong();
         }
 
-        public List<Chat> GetChats()
+        public void GetChats()
         {
             _logger.Info($"GetMessage request");
             Task.Delay(1000).Wait();
-            return _storage.GetChats();
+            _callback.ChatsReceived(_storage.GetChats());
         }
 
         public void CreateChat()
         {
             _storage.CreateChat();
+            _callback.ChatCreated();
         }
 
         public void AddMessage(string chatId, Message message)
         {
             _logger.Info($"SetMessage request");
             _storage.AddMessage(chatId, message);
-
-            Subscribers.ForEach(delegate(IMessageCallback callback)
-            {
-                if (((ICommunicationObject)callback).State == CommunicationState.Opened)
-                {
-                    callback.OnMessageAdded(message);
-                }
-                else
-                {
-                    Subscribers.Remove(callback);
-                }
-            });
+            _callback.OnMessageAdded(message);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Client.Model;
 
 namespace Client.UI
 {
@@ -9,7 +10,7 @@ namespace Client.UI
 
         public MainWindow()
         {
-            _viewModel = new MainViewModel();
+            _viewModel = new MainViewModel(new MessageClient());
             DataContext = _viewModel;
             InitializeComponent();
             _init();

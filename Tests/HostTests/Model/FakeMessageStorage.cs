@@ -2,7 +2,7 @@
 
 namespace HostTests.Model
 {
-    public class FakeMessageStorage : IMessageStorage
+    public class FakeMessageStorage
     {
         private string _message;
 
