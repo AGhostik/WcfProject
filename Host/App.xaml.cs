@@ -8,6 +8,7 @@ using System.ServiceModel.Description;
 using System.Threading.Tasks;
 using System.Windows;
 using Host.Model;
+using Host.Model.Storages;
 using Host.UI;
 using NLog;
 using Unity;
@@ -44,7 +45,7 @@ namespace Host
         private UnityServiceHost CreateServiceHost(IUnityContainer container)
         {
             var unityServiceHost = new UnityServiceHost(container, typeof(MessageService), new Uri("http://localhost:8080"));
-            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new BasicHttpBinding(), "MessageService");
+            unityServiceHost.AddServiceEndpoint(typeof(IMessageService), new WSDualHttpBinding(), "MessageService");
             var sdb = unityServiceHost.Description.Behaviors.Find<ServiceDebugBehavior>();
             sdb.IncludeExceptionDetailInFaults = true;
             return unityServiceHost;

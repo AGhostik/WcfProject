@@ -1,20 +1,34 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 using System.Threading.Tasks;
+using Host.Model.Data;
 using NLog;
 
 namespace Host.Model
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IMessageCallback))]
     public interface IMessageService
     {
         [OperationContract]
         void Ping();
 
         [OperationContract]
-        string GetMessage();
+        bool Subscribe();
 
         [OperationContract]
-        void SetMessage(string message);
+        List<Chat> GetChats();
+
+        [OperationContract]
+        void CreateChat();
+
+        [OperationContract(IsOneWay = true)]
+        void AddMessage(string chatId, Message message);
+    }
+    
+    public interface IMessageCallback
+    { 
+        [OperationContract(IsOneWay = true)]
+        void OnMessageAdded(Message message);
     }
 
     public class MessageService : IMessageService
@@ -27,22 +41,57 @@ namespace Host.Model
             _storage = storage;
         }
 
+        private static readonly List<IMessageCallback> Subscribers = new List<IMessageCallback>();
+
+        public bool Subscribe()
+        {
+            try
+            {
+                var callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
+                //callback.id = id;
+                if (!Subscribers.Contains(callback))
+                    Subscribers.Add(callback);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void Ping()
         {
 
         }
 
-        public string GetMessage()
+        public List<Chat> GetChats()
         {
             _logger.Info($"GetMessage request");
             Task.Delay(1000).Wait();
-            return _storage.GetMessage();
+            return _storage.GetChats();
         }
 
-        public void SetMessage(string message)
+        public void CreateChat()
         {
-            _logger.Info($"SetMessage request; {message?.Length}");
-            _storage.SetMessage(message);
+            _storage.CreateChat();
+        }
+
+        public void AddMessage(string chatId, Message message)
+        {
+            _logger.Info($"SetMessage request");
+            _storage.AddMessage(chatId, message);
+
+            Subscribers.ForEach(delegate(IMessageCallback callback)
+            {
+                if (((ICommunicationObject)callback).State == CommunicationState.Opened)
+                {
+                    callback.OnMessageAdded(message);
+                }
+                else
+                {
+                    Subscribers.Remove(callback);
+                }
+            });
         }
     }
 }
