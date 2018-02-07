@@ -10,10 +10,9 @@ using System.ServiceModel;
 
 namespace Client.UI
 {
-    public class MainViewModel : ViewModelBase
+    public class ChatViewModel : ViewModelBase
     {
         private readonly MessageClient _messageClient;
-        private readonly ConnectionSettings _connectionSettings;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         private bool _isBusy;
@@ -21,10 +20,9 @@ namespace Client.UI
         public EventHandler ConnectionError;
         public EventHandler ServerError;
 
-        public MainViewModel(MessageClient messageClient, ConnectionSettings connectionSettings)
+        public ChatViewModel(MessageClient messageClient)
         {
             _messageClient = messageClient;
-            _connectionSettings = connectionSettings;
             _init();
         }
 
@@ -53,11 +51,7 @@ namespace Client.UI
                 IsBusy = true;
                 try
                 {
-                    var newMessage = await _messageClient.AddMessage(new Message()
-                    {
-                        Author = _connectionSettings.Username,
-                        Content = Text,
-                    });
+                    var newMessage = await _messageClient.AddMessage(Text);
                     Messages.Add(newMessage);
                 }
                 catch (EndpointNotFoundException)

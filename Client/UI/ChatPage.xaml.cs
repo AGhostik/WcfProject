@@ -4,13 +4,14 @@ using Client.Model;
 
 namespace Client.UI
 {
-    public partial class MainWindow : Window
+    public partial class ChatPage
     {
-        private readonly MainViewModel _viewModel;
+        private readonly ChatViewModel _viewModel;
 
-        public MainWindow()
+        public ChatPage(ConnectionSettings connectionSettings)
         {
-            _viewModel = new MainViewModel(new MessageClient());
+            var messageClient = new MessageClient(connectionSettings);
+            _viewModel = new ChatViewModel(messageClient);
             DataContext = _viewModel;
             InitializeComponent();
             _init();

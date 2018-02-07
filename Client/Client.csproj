@@ -104,9 +104,16 @@
     <Compile Include="Model\DuplexContractClient.cs" />
     <Compile Include="Model\MessageClient.cs" />
     <Compile Include="UI\ConnectionSettings.cs" />
-    <Compile Include="UI\MainViewModel.cs" />
-    <Compile Include="UI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="UI\LogInViewModel.cs" />
+    <Compile Include="UI\LogInPage.xaml.cs">
+      <DependentUpon>LogInPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ChatViewModel.cs" />
+    <Compile Include="UI\ChatPage.xaml.cs">
+      <DependentUpon>ChatPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ClientView.xaml.cs">
+      <DependentUpon>ClientView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +154,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\MainWindow.xaml">
+    <Page Include="UI\LogInPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ChatPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\ClientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
