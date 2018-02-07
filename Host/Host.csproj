@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.5.6\lib\net47\CommonServiceLocator.dll</HintPath>
@@ -119,6 +122,7 @@
     <Compile Include="Model\IMessageStorage.cs" />
     <Compile Include="Model\MessageService.cs" />
     <Compile Include="Model\StorageSettings.cs" />
+    <Compile Include="Model\Storages\Attributes.cs" />
     <Compile Include="Model\Storages\XmlStorage.cs" />
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">
@@ -147,6 +151,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.manifest" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

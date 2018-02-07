@@ -18,10 +18,10 @@ namespace Host.Model.Storages
             {
                 var document = new XDocument(new XElement("chats"));
                 document.Save(FilePath);
-                CreateChat();
+                CreateChat("Super Secret Chat");
             }
         }
-        
+
         public void AddMessage(string chatId, Message message)
         {
             lock (_syncObject)
@@ -53,39 +53,49 @@ namespace Host.Model.Storages
             }
         }
 
-        public void CreateChat()
+        public void CreateChat(string name)
         {
             lock (_syncObject)
             {
                 var document = XDocument.Load(FilePath);
                 var newId = _getNewChatId(document);
                 var newChat = new XElement($"chat", new XAttribute("id", newId),
-                    new XAttribute("name", "Super Secret Chat"));
+                    new XAttribute("name", name));
                 document.Element("chats")?.Add(newChat);
+            }
+        }
+
+        public List<Message> GetChatMessages(string chatId)
+        {
+            lock (_syncObject)
+            {
+                var document = XDocument.Load(FilePath);
+                var currentChat = document.Element("chats")?.Elements("chat")
+                    .Last(chat => chat.Attribute("id")?.Value == chatId);
+                var messages = currentChat?.Elements("message");
+                if (messages == null) throw new Exception("No messages");
+
+                return messages.Select(message => new Message
+                    {
+                        Author = message.Attribute("author")?.Value,
+                        Content = message.Value,
+                        Time = DateTime.Parse(message.Attribute("time")?.Value)
+                    })
+                    .ToList();
             }
         }
 
         private string _getNewChatId(XDocument document)
         {
-            if (document == null)
-            {
-                throw new ArgumentNullException(nameof(document));
-            }
+            if (document == null) throw new ArgumentNullException(nameof(document));
 
             var chats = document.Element("chats")?.Elements("chat").ToArray();
 
-            if (chats == null)
-            {
-                throw new Exception("Chats not exist. Cant search available chatId");
-            }
+            if (chats == null) throw new Exception("Chats not exist. Cant search available chatId");
 
             for (var i = 0; i < chats.Length; i++)
-            {
                 if (chats[i].Attribute("id")?.Value != i.ToString())
-                {
                     return i.ToString();
-                }
-            }
 
             return $"{chats.Length + 1}";
         }

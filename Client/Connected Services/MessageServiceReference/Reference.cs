@@ -168,10 +168,16 @@ namespace Client.MessageServiceReference {
         System.Threading.Tasks.Task GetChatsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/CreateChat", ReplyAction="http://tempuri.org/IMessageService/CreateChatResponse")]
-        void CreateChat();
+        void CreateChat(string name);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/CreateChat", ReplyAction="http://tempuri.org/IMessageService/CreateChatResponse")]
-        System.Threading.Tasks.Task CreateChatAsync();
+        System.Threading.Tasks.Task CreateChatAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetChatMessages", ReplyAction="http://tempuri.org/IMessageService/GetChatMessagesResponse")]
+        void GetChatMessages(string chatId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/GetChatMessages", ReplyAction="http://tempuri.org/IMessageService/GetChatMessagesResponse")]
+        System.Threading.Tasks.Task GetChatMessagesAsync(string chatId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/AddMessage", ReplyAction="http://tempuri.org/IMessageService/AddMessageResponse")]
         void AddMessage(string chatId, Client.MessageServiceReference.Message message);
@@ -191,6 +197,9 @@ namespace Client.MessageServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/ChatCreated", ReplyAction="http://tempuri.org/IMessageService/ChatCreatedResponse")]
         void ChatCreated();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/ChatMessagesReceived", ReplyAction="http://tempuri.org/IMessageService/ChatMessagesReceivedResponse")]
+        void ChatMessagesReceived(Client.MessageServiceReference.Message[] messages);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMessageService/OnMessageAdded")]
         void OnMessageAdded(Client.MessageServiceReference.Message message);
@@ -240,12 +249,20 @@ namespace Client.MessageServiceReference {
             return base.Channel.GetChatsAsync();
         }
         
-        public void CreateChat() {
-            base.Channel.CreateChat();
+        public void CreateChat(string name) {
+            base.Channel.CreateChat(name);
         }
         
-        public System.Threading.Tasks.Task CreateChatAsync() {
-            return base.Channel.CreateChatAsync();
+        public System.Threading.Tasks.Task CreateChatAsync(string name) {
+            return base.Channel.CreateChatAsync(name);
+        }
+        
+        public void GetChatMessages(string chatId) {
+            base.Channel.GetChatMessages(chatId);
+        }
+        
+        public System.Threading.Tasks.Task GetChatMessagesAsync(string chatId) {
+            return base.Channel.GetChatMessagesAsync(chatId);
         }
         
         public void AddMessage(string chatId, Client.MessageServiceReference.Message message) {

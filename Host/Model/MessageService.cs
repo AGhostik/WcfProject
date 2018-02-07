@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ServiceModel;
-using System.Threading.Tasks;
+﻿using System.ServiceModel;
 using Host.Model.Data;
 using NLog;
 
@@ -14,22 +11,22 @@ namespace Host.Model
         void Ping();
 
         [OperationContract]
-        void GetChats();
+        Chat[] GetChats();
 
         [OperationContract]
-        void CreateChat();
+        void CreateChat(string name);
+
+        [OperationContract]
+        Message[] GetChatMessages(string chatId);
 
         [OperationContract]
         void AddMessage(string chatId, Message message);
     }
-    
+
     public interface IMessageCallback
-    { 
+    {
         [OperationContract]
         void Pong();
-
-        [OperationContract]
-        void ChatsReceived(List<Chat> chats);
 
         [OperationContract]
         void ChatCreated();
@@ -41,8 +38,8 @@ namespace Host.Model
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class MessageService : IMessageService
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly IMessageCallback _callback;
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly IMessageStorage _storage;
 
         public MessageService(IMessageStorage storage)
@@ -50,22 +47,23 @@ namespace Host.Model
             _storage = storage;
             _callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
         }
-        
+
         public void Ping()
         {
+            _logger.Info($"Ping request");
             _callback.Pong();
         }
 
-        public void GetChats()
+        public Chat[] GetChats()
         {
             _logger.Info($"GetMessage request");
-            Task.Delay(1000).Wait();
-            _callback.ChatsReceived(_storage.GetChats());
+            return _storage.GetChats().ToArray();
         }
 
-        public void CreateChat()
+        public void CreateChat(string name)
         {
-            _storage.CreateChat();
+            _logger.Info($"CreateChat request");
+            _storage.CreateChat(name);
             _callback.ChatCreated();
         }
 
@@ -74,6 +72,12 @@ namespace Host.Model
             _logger.Info($"SetMessage request");
             _storage.AddMessage(chatId, message);
             _callback.OnMessageAdded(message);
+        }
+
+        public Message[] GetChatMessages(string chatId)
+        {
+            _logger.Info($"GetChatMessages request");
+            return _storage.GetChatMessages(chatId).ToArray();
         }
     }
 }

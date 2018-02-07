@@ -23,10 +23,24 @@
   </xs:element>
   <xs:element name="CreateChat">
     <xs:complexType>
-      <xs:sequence />
+      <xs:sequence>
+        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateChatResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChatMessages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="chatId" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChatMessagesResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
@@ -76,10 +90,22 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="ChatMessagesReceived">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="messages" nillable="true" type="q3:ArrayOfMessage" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChatMessagesReceivedResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="OnMessageAdded">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="message" nillable="true" type="q3:Message" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="message" nillable="true" type="q4:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -6,7 +6,6 @@ using Client.MessageServiceReference;
 using Client.UI;
 using NLog;
 using Xceed.Wpf.DataGrid;
-using Message = Client.MessageServiceReference.Message;
 
 namespace Client.Model
 {
@@ -31,26 +30,35 @@ namespace Client.Model
             await _proxy.PingAsync();
         }
 
-        public async Task<Message> AddMessage(string message)
+        public async Task<Message> AddMessage(string chatId, string message)
         {
             var newMessage = new Message
             {
                 Author = _connectionSettings.Username,
                 Content = message
             };
-            await _proxy.AddMessageAsync("0", newMessage);
+            await _proxy.AddMessageAsync(chatId, newMessage);
             return _callback.Message;
         }
 
-        public async Task GetChats()
+        public async Task<Chat[]> GetChats()
         {
             await _proxy.GetChatsAsync();
+            return _callback.Chats;
+        }
+
+        public async Task<Message[]> GetChatMessages(string chatId)
+        {
+            await _proxy.GetChatMessagesAsync(chatId);
+            return _callback.Messages;
         }
     }
 
     public class CallbackClient : IMessageServiceCallback
     {
         public Message Message { get; private set; }
+        public Message[] Messages { get; private set; }
+        public Chat[] Chats { get; private set; }
 
         public void Pong()
         {
@@ -59,7 +67,7 @@ namespace Client.Model
 
         public void ChatsReceived(Chat[] chats)
         {
-            
+            Chats = chats;
         }
 
         public void ChatCreated()
@@ -70,6 +78,11 @@ namespace Client.Model
         public void OnMessageAdded(Message message)
         {
             Message = message;
+        }
+
+        public void ChatMessagesReceived(Message[] messages)
+        {
+            Messages = messages;
         }
     }
 }
