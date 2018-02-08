@@ -101,6 +101,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Model\AuthorizationClient.cs" />
+    <Compile Include="Model\CallbackClient.cs" />
     <Compile Include="Model\DuplexContractClient.cs" />
     <Compile Include="Model\MessageClient.cs" />
     <Compile Include="UI\ConnectionSettings.cs" />

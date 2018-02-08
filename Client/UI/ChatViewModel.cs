@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ServiceModel;
+using System.Threading.Tasks;
+using Client.MessageServiceReference;
 using Client.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Client.MessageServiceReference;
 using NLog;
-using System.ServiceModel;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using NLog.Common;
 
 namespace Client.UI
 {
     public class ChatViewModel : ViewModelBase
     {
-        private readonly MessageClient _messageClient;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly MessageClient _messageClient;
 
         private bool _isBusy;
         private string _text;
@@ -43,13 +40,13 @@ namespace Client.UI
         public ObservableCollection<Chat> Chats { get; set; } = new ObservableCollection<Chat>();
 
         public Chat SelectedChat { get; set; }
-        
+
         public bool IsBusy
         {
             get => _isBusy;
             set => Set(ref _isBusy, value);
         }
-        
+
         private void _init()
         {
             IsBusy = false;
@@ -64,10 +61,7 @@ namespace Client.UI
                 {
                     var messages = await _messageClient.GetChatMessages(SelectedChat.Id);
 
-                    foreach (var message in messages)
-                    {
-                        Messages.Add(message);
-                    }
+                    foreach (var message in messages) Messages.Add(message);
                 });
             });
 
@@ -75,10 +69,10 @@ namespace Client.UI
             {
                 if (SelectedChat == null) return;
                 await _doClientWork(async () =>
-                  {
-                      var newMessage = await _messageClient.AddMessage(SelectedChat.Id, Text);
-                      Messages.Add(newMessage);
-                  });
+                {
+                    var newMessage = await _messageClient.AddMessage(SelectedChat.Id, Text);
+                    Messages.Add(newMessage);
+                });
             });
 
             _logger.Info("Hello! Nice day for checking mail!");
@@ -89,11 +83,14 @@ namespace Client.UI
             await _doClientWork(async () =>
             {
                 var chats = await _messageClient.GetChats();
-                foreach (var chat in chats)
-                {
-                    Chats.Add(chat);
-                }
+                foreach (var chat in chats) Chats.Add(chat);
             });
+        }
+
+        private void FillChatListSync()
+        {
+            var chats = _messageClient.GetChatsSync();
+            foreach (var chat in chats) Chats.Add(chat);
         }
 
         private async Task _doClientWork(Func<Task> asyncAction)
