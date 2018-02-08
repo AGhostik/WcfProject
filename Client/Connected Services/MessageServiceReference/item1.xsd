@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8080/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Host.Model.Data" />
-  <xs:element name="Ping">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="PingResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="GetChats">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="GetChatsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="GetChatsResult" nillable="true" type="q1:ArrayOfChat" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChatMessages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="chatId" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetChatMessagesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="GetChatMessagesResult" nillable="true" type="q2:ArrayOfMessage" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Ping">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PingResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
@@ -33,23 +49,11 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetChatMessages">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="chatId" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetChatMessagesResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="AddMessage">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="chatId" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="message" nillable="true" type="q1:Message" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="message" nillable="true" type="q3:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -63,41 +67,7 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
-  <xs:element name="PongResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ChatsReceived">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="chats" nillable="true" type="q2:ArrayOfChat" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ChatsReceivedResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
   <xs:element name="ChatCreated">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ChatCreatedResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ChatMessagesReceived">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Host.Model.Data" minOccurs="0" name="messages" nillable="true" type="q3:ArrayOfMessage" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ChatMessagesReceivedResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

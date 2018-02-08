@@ -43,32 +43,18 @@ namespace Client.Model
 
         public async Task<Chat[]> GetChats()
         {
-            await _proxy.GetChatsAsync();
-            return _callback.Chats;
+            return await _proxy.GetChatsAsync();
         }
 
         public async Task<Message[]> GetChatMessages(string chatId)
         {
-            await _proxy.GetChatMessagesAsync(chatId);
-            return _callback.Messages;
+            return await _proxy.GetChatMessagesAsync(chatId);
         }
     }
 
     public class CallbackClient : IMessageServiceCallback
     {
         public Message Message { get; private set; }
-        public Message[] Messages { get; private set; }
-        public Chat[] Chats { get; private set; }
-
-        public void Pong()
-        {
-            
-        }
-
-        public void ChatsReceived(Chat[] chats)
-        {
-            Chats = chats;
-        }
 
         public void ChatCreated()
         {
@@ -80,9 +66,9 @@ namespace Client.Model
             Message = message;
         }
 
-        public void ChatMessagesReceived(Message[] messages)
+        public void Pong()
         {
-            Messages = messages;
+            
         }
     }
 }

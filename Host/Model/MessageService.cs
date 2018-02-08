@@ -8,27 +8,27 @@ namespace Host.Model
     public interface IMessageService
     {
         [OperationContract]
-        void Ping();
-
-        [OperationContract]
         Chat[] GetChats();
 
         [OperationContract]
-        void CreateChat(string name);
-
-        [OperationContract]
         Message[] GetChatMessages(string chatId);
-
+        
+        [OperationContract]
+        void Ping();
+        
+        [OperationContract]
+        void CreateChat(string name);
+        
         [OperationContract]
         void AddMessage(string chatId, Message message);
     }
 
     public interface IMessageCallback
     {
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void Pong();
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void ChatCreated();
 
         [OperationContract(IsOneWay = true)]
