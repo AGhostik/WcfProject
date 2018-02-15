@@ -45,7 +45,7 @@
             <Label
                 Grid.Column="0"
                 Margin="5"
-                Content="Username"
+                Content="{Binding Username}"
                 FontWeight="Bold" />
             <Label
                 Grid.Column="1"

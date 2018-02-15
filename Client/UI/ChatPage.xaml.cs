@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Client.MessageServiceReference;
 using Client.Model;
 
 namespace Client.UI
@@ -8,10 +9,9 @@ namespace Client.UI
     {
         private readonly ChatViewModel _viewModel;
 
-        public ChatPage(ConnectionSettings connectionSettings)
+        public ChatPage(MessageClient client)
         {
-            var messageClient = new MessageClient(connectionSettings);
-            _viewModel = new ChatViewModel(messageClient);
+            _viewModel = new ChatViewModel(client);
             DataContext = _viewModel;
             InitializeComponent();
             _init();

@@ -1,7 +1,5 @@
-﻿using System.ServiceModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Client.MessageServiceReference;
-using Client.UI;
 using NLog;
 
 namespace Client.Model
@@ -9,18 +7,16 @@ namespace Client.Model
     public class MessageClient
     {
         private readonly CallbackClient _callback;
-        private readonly ConnectionSettings _connectionSettings;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly IMessageService _proxy;
 
-        public MessageClient(ConnectionSettings connectionSettings)
+        public string Username { get; }
+
+        public MessageClient(IMessageService proxy, CallbackClient callback, string username)
         {
-            _connectionSettings = connectionSettings;
-            _callback = new CallbackClient();
-            var client = new DuplexContractClient(_callback, new WSDualHttpBinding(),
-                new EndpointAddress(connectionSettings.Url + "/MessageService"));
-            _proxy = client.ChannelFactory.CreateChannel();
-            //_logger.Info("Proxy created");
+            _callback = callback;
+            _proxy = proxy;
+            Username = username;
         }
 
         public async Task PingServer()
@@ -30,9 +26,9 @@ namespace Client.Model
 
         public async Task<Message> AddMessage(string chatId, string message)
         {
-            var newMessage = new Message
+            var newMessage = new Message()
             {
-                Author = _connectionSettings.Username,
+                Author = Username,
                 Content = message
             };
             await _proxy.AddMessageAsync(chatId, newMessage);

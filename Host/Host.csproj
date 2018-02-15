@@ -117,12 +117,15 @@
     </Compile>
     <Compile Include="Model\Data\Chat.cs" />
     <Compile Include="Model\Data\Message.cs" />
+    <Compile Include="Model\Data\User.cs" />
     <Compile Include="Model\HostService.cs" />
     <Compile Include="Model\IHostService.cs" />
-    <Compile Include="Model\IMessageStorage.cs" />
     <Compile Include="Model\MessageService.cs" />
     <Compile Include="Model\StorageSettings.cs" />
-    <Compile Include="Model\Storages\Attributes.cs" />
+    <Compile Include="Model\Storages\UserLimitException.cs" />
+    <Compile Include="Model\Storages\IMessageStorage.cs" />
+    <Compile Include="Model\Storages\UserNameException.cs" />
+    <Compile Include="Model\Storages\XNames.cs" />
     <Compile Include="Model\Storages\XmlStorage.cs" />
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">

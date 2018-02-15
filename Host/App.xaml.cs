@@ -32,7 +32,9 @@ namespace Host
 
             container.RegisterInstance(new StorageSettings
             {
-                MessageLimit = 0,
+                MessagesLimit = 0,
+                UsersLimit = 5,
+                ChatsLimit = 8,
             });
             container.RegisterInstance<ServiceHost>(CreateServiceHost(container));
 

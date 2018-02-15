@@ -7,8 +7,9 @@ namespace Host.UI
     public class MainViewModel : ViewModelBase
     {
         private readonly IHostService _hostService;
+        private bool _buttonEnabled;
 
-        private bool _startEnabled;
+        private bool _readOnly;
 
         public MainViewModel(IHostService service)
         {
@@ -18,20 +19,31 @@ namespace Host.UI
 
         public RelayCommand StartService { get; set; }
 
-        public bool StartEnabled
+        public int MessagesLimit { get; set; }
+        public int ChatsLimit { get; set; }
+        public int UsersLimit { get; set; }
+
+        public bool ReadOnly
         {
-            get => _startEnabled;
-            set => Set(ref _startEnabled, value);
+            get => _readOnly;
+            set => Set(ref _readOnly, value);
+        }
+
+        public bool ButtonEnabled
+        {
+            get => _buttonEnabled;
+            set => Set(ref _buttonEnabled, value);
         }
 
         private void _init()
         {
-            StartEnabled = true;
-
+            ReadOnly = false;
+            ButtonEnabled = true;
             StartService = new RelayCommand(() =>
             {
                 _hostService.Open();
-                StartEnabled = false;
+                ReadOnly = true;
+                ButtonEnabled = false;
             });
         }
     }

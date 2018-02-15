@@ -11,7 +11,7 @@ namespace Client.Model
         private CallbackClient _callback;
         private IMessageService _proxy;
 
-        public async Task PingServer(string url)
+        public async Task<MessageClient> Login(string url, string username, string password)
         {
             _callback = new CallbackClient();
             var client = new DuplexContractClient(_callback, new WSDualHttpBinding(),
@@ -19,6 +19,8 @@ namespace Client.Model
             _proxy = client.ChannelFactory.CreateChannel();
 
             await _proxy.PingAsync();
+
+            return new MessageClient(_proxy, _callback, username);
         }
     }
 }

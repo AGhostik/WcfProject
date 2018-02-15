@@ -44,13 +44,9 @@ namespace Client.UI
             {
                 await _doClientWork(async () =>
                 {
-                    await _client.PingServer(Url);
+                    var connect = await _client.Login(Url, Username, "no pass");
 
-                    var win = new ChatPage(new ConnectionSettings
-                    {
-                        Url = Url,
-                        Username = Username
-                    });
+                    var win = new ChatPage(connect);
                     NavigateHandler(win, null); //я знаю что это полное говно, но так проще
                 });
             });

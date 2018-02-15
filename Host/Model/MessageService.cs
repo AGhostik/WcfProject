@@ -1,5 +1,7 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using Host.Model.Data;
+using Host.Model.Storages;
 using NLog;
 
 namespace Host.Model
@@ -8,19 +10,25 @@ namespace Host.Model
     public interface IMessageService
     {
         [OperationContract]
-        Chat[] GetChats();
+        void AddMessage(string chatId, Message message);
+        
+        [OperationContract]
+        void AddUser(string name, string password);
 
-        [OperationContract]
-        Message[] GetChatMessages(string chatId);
-        
-        [OperationContract]
-        void Ping();
-        
         [OperationContract]
         void CreateChat(string name);
         
         [OperationContract]
-        void AddMessage(string chatId, Message message);
+        Message[] GetChatMessages(string chatId);
+
+        [OperationContract]
+        Chat[] GetChats();
+        
+        [OperationContract]
+        void Ping();
+
+        [OperationContract]
+        bool UserExist(string id);
     }
 
     public interface IMessageCallback
@@ -30,6 +38,9 @@ namespace Host.Model
 
         [OperationContract(IsOneWay = true)]
         void ChatCreated();
+
+        [OperationContract(IsOneWay = true)]
+        void UserCreated(bool isFailed);
 
         [OperationContract(IsOneWay = true)]
         void OnMessageAdded(Message message);
@@ -54,29 +65,55 @@ namespace Host.Model
             _callback.Pong();
         }
 
+        public bool UserExist(string id)
+        {
+            _logger.Info($"User exist request; id:{id}");
+            return _storage.UserExist(id);
+        }
+
         public Chat[] GetChats()
         {
             _logger.Info($"GetMessage request");
             return _storage.GetChats().ToArray();
         }
 
+        public void AddUser(string name, string password)
+        {
+            _logger.Info($"AddUser request; name:{name}");
+            try
+            {
+                _storage.AddUser(name, password, "default");
+                _callback.UserCreated(false);
+            }
+            catch (UserNameException e)
+            {
+                _logger.Error(e.Message);
+                _callback.UserCreated(true);
+            }
+            catch (UserLimitException e)
+            {
+                _logger.Error(e.Message);
+                _callback.UserCreated(true);
+            }
+        }
+
         public void CreateChat(string name)
         {
-            _logger.Info($"CreateChat request");
+            _logger.Info($"CreateChat request; name:{name}");
             _storage.CreateChat(name);
             _callback.ChatCreated();
         }
 
         public void AddMessage(string chatId, Message message)
         {
-            _logger.Info($"SetMessage request");
+            _logger.Info($"SetMessage request; chatId:{chatId}, Message:{Environment.NewLine}{message}");
             _storage.AddMessage(chatId, message);
             _callback.OnMessageAdded(message);
         }
 
         public Message[] GetChatMessages(string chatId)
         {
-            _logger.Info($"GetChatMessages request");
+            _logger.Info($"GetChatMessages request; chatId:{chatId}");
             return _storage.GetChatMessages(chatId).ToArray();
         }
     }

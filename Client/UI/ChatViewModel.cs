@@ -47,11 +47,13 @@ namespace Client.UI
             set => Set(ref _isBusy, value);
         }
 
+        public string Username { get; private set; }
+
         private void _init()
         {
             IsBusy = false;
-
-            FillChatList();
+            Username = _messageClient.Username;
+            FillChatListSync();
 
             SelectionChanged = new RelayCommand(async () =>
             {
@@ -76,15 +78,6 @@ namespace Client.UI
             });
 
             _logger.Info("Hello! Nice day for checking mail!");
-        }
-
-        private async void FillChatList()
-        {
-            await _doClientWork(async () =>
-            {
-                var chats = await _messageClient.GetChats();
-                foreach (var chat in chats) Chats.Add(chat);
-            });
         }
 
         private void FillChatListSync()

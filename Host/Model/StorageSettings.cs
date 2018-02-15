@@ -2,6 +2,8 @@
 {
     public class StorageSettings
     {
-        public int MessageLimit { get; set; }
+        public int MessagesLimit { get; set; }
+        public int UsersLimit { get; set; }
+        public int ChatsLimit { get; set; }
     }
 }
