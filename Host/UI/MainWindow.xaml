@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Host.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
     Title="Host"
     Width="250"
     Height="250"
@@ -62,5 +63,12 @@
             Command="{Binding StartService}"
             Content="Start service"
             IsEnabled="{Binding ButtonEnabled}" />
+
+        <xceed:BusyIndicator
+            Grid.Row="0"
+            Grid.RowSpan="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            IsBusy="{Binding IsBusy}" />
     </Grid>
 </Window>

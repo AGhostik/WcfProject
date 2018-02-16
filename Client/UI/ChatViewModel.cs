@@ -55,6 +55,8 @@ namespace Client.UI
             Username = _messageClient.Username;
             FillChatListSync();
 
+            _messageClient.MessageAddedEvent += _addMessage;
+
             SelectionChanged = new RelayCommand(async () =>
             {
                 Messages.Clear();
@@ -72,12 +74,19 @@ namespace Client.UI
                 if (SelectedChat == null) return;
                 await _doClientWork(async () =>
                 {
-                    var newMessage = await _messageClient.AddMessage(SelectedChat.Id, Text);
-                    Messages.Add(newMessage);
+                    await _messageClient.AddMessage(SelectedChat.Id, Text);
                 });
             });
 
             _logger.Info("Hello! Nice day for checking mail!");
+        }
+
+        private void _addMessage(object sender, MessageArg arg)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                Messages.Add(arg.Message);
+            });
         }
 
         private void FillChatListSync()

@@ -1,14 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.ServiceModel;
+using System.Threading.Tasks;
 using Client.MessageServiceReference;
 using NLog;
 
 namespace Client.Model
 {
-    public class MessageClient
+    public class MessageClient : IDisposable
     {
         private readonly CallbackClient _callback;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly IMessageService _proxy;
+        
+        public EventHandler<MessageArg> MessageAddedEvent;
 
         public string Username { get; }
 
@@ -16,6 +20,11 @@ namespace Client.Model
         {
             _callback = callback;
             _proxy = proxy;
+            _proxy.Subscribe();
+            _callback.MessageAdded += (sender, arg) =>
+            {
+                MessageAddedEvent?.Invoke(sender, arg);
+            };
             Username = username;
         }
 
@@ -24,7 +33,7 @@ namespace Client.Model
             await _proxy.PingAsync();
         }
 
-        public async Task<Message> AddMessage(string chatId, string message)
+        public async Task AddMessage(string chatId, string message)
         {
             var newMessage = new Message()
             {
@@ -32,7 +41,6 @@ namespace Client.Model
                 Content = message
             };
             await _proxy.AddMessageAsync(chatId, newMessage);
-            return _callback.Message;
         }
 
         public async Task<Chat[]> GetChats()
@@ -48,6 +56,11 @@ namespace Client.Model
         public async Task<Message[]> GetChatMessages(string chatId)
         {
             return await _proxy.GetChatMessagesAsync(chatId);
+        }
+
+        public void Dispose()
+        {
+            _proxy.Unsubscribe();
         }
     }
 }

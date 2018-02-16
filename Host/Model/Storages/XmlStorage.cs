@@ -15,7 +15,11 @@ namespace Host.Model.Storages
 
         public XmlStorage(StorageSettings storageSettings)
         {
-            if (!File.Exists(FilePath)) _createXml();
+            if (!File.Exists(FilePath))
+            {
+                _createXml();
+                CreateChat("Super Secret Chat");
+            }
 
             _storageSettings = storageSettings;
         }
@@ -101,7 +105,7 @@ namespace Host.Model.Storages
                 var newId = _getNewChatId(document);
                 var newChat = new XElement(XNames.Chat, new XAttribute(XNames.Id, newId),
                     new XAttribute(XNames.Name, name));
-                document.Element(XNames.Chats)?.Add(newChat);
+                document.Element(XNames.Root)?.Element(XNames.Chats)?.Add(newChat);
                 document.Save(FilePath);
             }
         }
@@ -133,7 +137,6 @@ namespace Host.Model.Storages
             root.Add(new XElement(XNames.Users));
             document.Add(root);
             document.Save(FilePath);
-            CreateChat("Super Secret Chat");
         }
 
         private static IEnumerable<XElement> _getAllChats(XContainer document)

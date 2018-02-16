@@ -10,6 +10,7 @@ namespace Host.UI
         private bool _buttonEnabled;
 
         private bool _readOnly;
+        private bool _isBusy;
 
         public MainViewModel(IHostService service)
         {
@@ -34,11 +35,14 @@ namespace Host.UI
             get => _buttonEnabled;
             set => Set(ref _buttonEnabled, value);
         }
+        public bool IsBusy { get => _isBusy; set => Set(ref _isBusy, value); }
 
         private void _init()
         {
             ReadOnly = false;
             ButtonEnabled = true;
+            IsBusy = false;
+
             StartService = new RelayCommand(() =>
             {
                 _hostService.Open();

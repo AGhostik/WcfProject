@@ -152,8 +152,20 @@ namespace Client.MessageServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MessageServiceReference.IMessageService", CallbackContract=typeof(Client.MessageServiceReference.IMessageServiceCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MessageServiceReference.IMessageService", CallbackContract=typeof(Client.MessageServiceReference.IMessageServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     public interface IMessageService {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Subscribe", ReplyAction="http://tempuri.org/IMessageService/SubscribeResponse")]
+        void Subscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Subscribe", ReplyAction="http://tempuri.org/IMessageService/SubscribeResponse")]
+        System.Threading.Tasks.Task SubscribeAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Unsubscribe", ReplyAction="http://tempuri.org/IMessageService/UnsubscribeResponse")]
+        void Unsubscribe();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/Unsubscribe", ReplyAction="http://tempuri.org/IMessageService/UnsubscribeResponse")]
+        System.Threading.Tasks.Task UnsubscribeAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMessageService/AddMessage", ReplyAction="http://tempuri.org/IMessageService/AddMessageResponse")]
         void AddMessage(string chatId, Client.MessageServiceReference.Message message);
@@ -240,6 +252,22 @@ namespace Client.MessageServiceReference {
         
         public MessageServiceClient(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(callbackInstance, binding, remoteAddress) {
+        }
+        
+        public void Subscribe() {
+            base.Channel.Subscribe();
+        }
+        
+        public System.Threading.Tasks.Task SubscribeAsync() {
+            return base.Channel.SubscribeAsync();
+        }
+        
+        public void Unsubscribe() {
+            base.Channel.Unsubscribe();
+        }
+        
+        public System.Threading.Tasks.Task UnsubscribeAsync() {
+            return base.Channel.UnsubscribeAsync();
         }
         
         public void AddMessage(string chatId, Client.MessageServiceReference.Message message) {

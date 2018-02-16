@@ -6,9 +6,15 @@ using NLog;
 
 namespace Host.Model
 {
-    [ServiceContract(CallbackContract = typeof(IMessageCallback))]
+    [ServiceContract(CallbackContract = typeof(IMessageCallback), SessionMode = SessionMode.Required)]
     public interface IMessageService
     {
+        [OperationContract(IsOneWay = false, IsInitiating=true)]
+        void Subscribe();
+
+        [OperationContract(IsOneWay = false, IsInitiating=true)]
+        void Unsubscribe();
+
         [OperationContract]
         void AddMessage(string chatId, Message message);
         
@@ -46,17 +52,38 @@ namespace Host.Model
         void OnMessageAdded(Message message);
     }
 
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)] //ConcurrencyMode = ConcurrencyMode.Reentrant, 
     public class MessageService : IMessageService
     {
+        public delegate void MessageAddedEventHandler(object sender, Message message);
+        public static event MessageAddedEventHandler MessageAddedEvent;
+
         private readonly IMessageCallback _callback;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly IMessageStorage _storage;
+
+        private MessageAddedEventHandler _sessionMessageAddedHandler;
 
         public MessageService(IMessageStorage storage)
         {
             _storage = storage;
             _callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
+        }
+
+        public void PublishMessageAddedHandler(object sender, Message message)
+        {
+            _callback.OnMessageAdded(message);
+        }
+
+        public void Subscribe()
+        {
+            _sessionMessageAddedHandler = new MessageAddedEventHandler(PublishMessageAddedHandler);
+            MessageAddedEvent += _sessionMessageAddedHandler;
+        }
+
+        public void Unsubscribe()
+        {
+            MessageAddedEvent -= _sessionMessageAddedHandler;
         }
 
         public void Ping()
@@ -108,7 +135,7 @@ namespace Host.Model
         {
             _logger.Info($"SetMessage request; chatId:{chatId}, Message:{Environment.NewLine}{message}");
             _storage.AddMessage(chatId, message);
-            _callback.OnMessageAdded(message);
+            MessageAddedEvent?.Invoke(this, message);
         }
 
         public Message[] GetChatMessages(string chatId)
