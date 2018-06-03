@@ -1,8 +1,10 @@
-﻿namespace Host.Model
+﻿using System.Threading.Tasks;
+
+namespace Host.Model
 {
     public interface IHostService
     {
-        void Close();
-        void Open();
+        Task Close();
+        Task Open();
     }
 }

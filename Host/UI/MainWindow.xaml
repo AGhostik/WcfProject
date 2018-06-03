@@ -6,11 +6,17 @@
     xmlns:local="clr-namespace:Host.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:z="http://schemas.microsoft.com/expression/2010/interactivity"
     Title="Host"
     Width="250"
     Height="250"
     d:DataContext="{d:DesignInstance d:Type=local:MainViewModel}"
     mc:Ignorable="d">
+    <z:Interaction.Triggers>
+        <z:EventTrigger EventName="Closing">
+            <z:InvokeCommandAction Command="{Binding StopService}" />
+        </z:EventTrigger>
+    </z:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

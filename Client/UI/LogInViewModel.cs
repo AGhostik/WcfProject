@@ -14,10 +14,10 @@ namespace Client.UI
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         private bool _isBusy;
-        public EventHandler ConnectionError;
+        public EventHandler CommunicationError;
 
         public EventHandler NavigateHandler;
-        public EventHandler ServerError;
+        public EventHandler DisposedError;
 
         public LogInViewModel(AuthorizationClient client)
         {
@@ -59,15 +59,15 @@ namespace Client.UI
             {
                 await asyncAction();
             }
-            catch (EndpointNotFoundException)
+            catch (CommunicationException)
             {
-                _logger.Error("EndpointNotFound Exception");
-                ConnectionError?.Invoke(this, null);
+                _logger.Error("CommunicationException");
+                CommunicationError?.Invoke(this, null);
             }
-            catch (FaultException)
+            catch (ObjectDisposedException)
             {
-                _logger.Error("Fault Exception");
-                ServerError?.Invoke(this, null);
+                _logger.Error("ObjectDisposedException");
+                DisposedError?.Invoke(this, null);
             }
             finally
             {

@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace Host.Model
 {
@@ -11,14 +12,14 @@ namespace Host.Model
             _host = host;
         }
 
-        public void Open()
+        public async Task Open()
         {
-            _host?.Open();
+            await Task.Factory.StartNew(() => { _host?.Open(); });
         }
 
-        public void Close()
+        public async Task Close()
         {
-            _host?.Close();
+            await Task.Factory.StartNew(() => { _host?.Close(); });
         }
     }
 }

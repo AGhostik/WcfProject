@@ -47,10 +47,16 @@
                 Margin="5"
                 Content="{Binding Username}"
                 FontWeight="Bold" />
-            <Label
+            <Button
                 Grid.Column="1"
                 Margin="5"
-                Content="===================" />
+                HorizontalAlignment="Right"
+                Command="{Binding GoBack}"
+                Content="GoBack" />
+            <!--<Label
+                Grid.Column="1"
+                Margin="5"
+                Content="===================" />-->
         </Grid>
 
         <ListBox
@@ -111,11 +117,13 @@
                 <TextBox
                     Grid.Column="0"
                     Margin="5"
+                    Padding="5"
                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                     TextWrapping="Wrap" />
                 <Button
                     Grid.Column="1"
                     Margin="5"
+                    Padding="5"
                     Command="{Binding SendMessage}"
                     Content="Send" />
             </Grid>

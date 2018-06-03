@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Windows;
 using Host.Model.Data;
 using Host.Model.Storages;
 using NLog;
@@ -9,27 +10,27 @@ namespace Host.Model
     [ServiceContract(CallbackContract = typeof(IMessageCallback), SessionMode = SessionMode.Required)]
     public interface IMessageService
     {
-        [OperationContract(IsOneWay = false, IsInitiating=true)]
+        [OperationContract(IsOneWay = false, IsInitiating = true)]
         void Subscribe();
 
-        [OperationContract(IsOneWay = false, IsInitiating=true)]
+        [OperationContract(IsOneWay = false, IsInitiating = true)]
         void Unsubscribe();
 
         [OperationContract]
         void AddMessage(string chatId, Message message);
-        
+
         [OperationContract]
         void AddUser(string name, string password);
 
         [OperationContract]
         void CreateChat(string name);
-        
+
         [OperationContract]
         Message[] GetChatMessages(string chatId);
 
         [OperationContract]
         Chat[] GetChats();
-        
+
         [OperationContract]
         void Ping();
 
@@ -52,11 +53,11 @@ namespace Host.Model
         void OnMessageAdded(Message message);
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)] //ConcurrencyMode = ConcurrencyMode.Reentrant, 
+    [ServiceBehavior(InstanceContextMode =
+        InstanceContextMode.PerSession)] //ConcurrencyMode = ConcurrencyMode.Reentrant, 
     public class MessageService : IMessageService
     {
         public delegate void MessageAddedEventHandler(object sender, Message message);
-        public static event MessageAddedEventHandler MessageAddedEvent;
 
         private readonly IMessageCallback _callback;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
@@ -70,14 +71,9 @@ namespace Host.Model
             _callback = OperationContext.Current.GetCallbackChannel<IMessageCallback>();
         }
 
-        public void PublishMessageAddedHandler(object sender, Message message)
-        {
-            _callback.OnMessageAdded(message);
-        }
-
         public void Subscribe()
         {
-            _sessionMessageAddedHandler = new MessageAddedEventHandler(PublishMessageAddedHandler);
+            _sessionMessageAddedHandler = PublishMessageAddedHandler;
             MessageAddedEvent += _sessionMessageAddedHandler;
         }
 
@@ -142,6 +138,23 @@ namespace Host.Model
         {
             _logger.Info($"GetChatMessages request; chatId:{chatId}");
             return _storage.GetChatMessages(chatId).ToArray();
+        }
+
+        public static event MessageAddedEventHandler MessageAddedEvent;
+
+        public void PublishMessageAddedHandler(object sender, Message message)
+        {
+            try
+            {
+                _callback.OnMessageAdded(message);
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Lost client\n===\n{e.Message}\n===\n{e.GetType()}");
+                MessageBox.Show("Lost client");
+                Unsubscribe();
+            }
+            
         }
     }
 }

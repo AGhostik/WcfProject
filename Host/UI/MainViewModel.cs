@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Host.Model;
 
@@ -8,9 +9,9 @@ namespace Host.UI
     {
         private readonly IHostService _hostService;
         private bool _buttonEnabled;
+        private bool _isBusy;
 
         private bool _readOnly;
-        private bool _isBusy;
 
         public MainViewModel(IHostService service)
         {
@@ -19,6 +20,7 @@ namespace Host.UI
         }
 
         public RelayCommand StartService { get; set; }
+        public RelayCommand StopService { get; set; }
 
         public int MessagesLimit { get; set; }
         public int ChatsLimit { get; set; }
@@ -35,7 +37,12 @@ namespace Host.UI
             get => _buttonEnabled;
             set => Set(ref _buttonEnabled, value);
         }
-        public bool IsBusy { get => _isBusy; set => Set(ref _isBusy, value); }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => Set(ref _isBusy, value);
+        }
 
         private void _init()
         {
@@ -43,11 +50,41 @@ namespace Host.UI
             ButtonEnabled = true;
             IsBusy = false;
 
-            StartService = new RelayCommand(() =>
+            StartService = new RelayCommand(async () =>
             {
-                _hostService.Open();
-                ReadOnly = true;
-                ButtonEnabled = false;
+                IsBusy = true;
+                try
+                {
+                    await _hostService.Open();
+                    ReadOnly = true;
+                    ButtonEnabled = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            });
+            StopService = new RelayCommand(async () =>
+            {
+                IsBusy = true;
+                try
+                {
+                    await _hostService.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
             });
         }
     }

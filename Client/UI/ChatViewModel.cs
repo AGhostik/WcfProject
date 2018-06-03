@@ -17,8 +17,10 @@ namespace Client.UI
 
         private bool _isBusy;
         private string _text;
-        public EventHandler ConnectionError;
-        public EventHandler ServerError;
+        public EventHandler CommunicationError;
+
+        public EventHandler NavigateHandler;
+        public EventHandler DisposedError;
 
         public ChatViewModel(MessageClient messageClient)
         {
@@ -33,7 +35,7 @@ namespace Client.UI
         }
 
         public RelayCommand SendMessage { get; set; }
-
+        public RelayCommand GoBack { get; set; }
         public RelayCommand SelectionChanged { get; set; }
 
         public ObservableCollection<Message> Messages { get; set; } = new ObservableCollection<Message>();
@@ -78,6 +80,8 @@ namespace Client.UI
                 });
             });
 
+            GoBack = new RelayCommand(() => { NavigateHandler(this, null); });
+
             _logger.Info("Hello! Nice day for checking mail!");
         }
 
@@ -102,15 +106,15 @@ namespace Client.UI
             {
                 await asyncAction();
             }
-            catch (EndpointNotFoundException)
+            catch (CommunicationException)
             {
-                _logger.Error("EndpointNotFound Exception");
-                ConnectionError?.Invoke(this, null);
+                _logger.Error("CommunicationException");
+                CommunicationError?.Invoke(this, null);
             }
-            catch (FaultException)
+            catch (ObjectDisposedException)
             {
-                _logger.Error("Fault Exception");
-                ServerError?.Invoke(this, null);
+                _logger.Error("ObjectDisposedException");
+                DisposedError?.Invoke(this, null);
             }
             finally
             {
